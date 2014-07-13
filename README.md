@@ -45,4 +45,3 @@ The following known issues and limitations currently apply to the COM provider. 
 * Only 32-bit target executables and COM libraries are supported.
 * Type libraries with Primary Interop Assemblies (PIAs) such as Microsoft Office are not supported.
 * All the types generated from the type library are embedded, rather than just the ones you refer to in your code.
-* All types are embedded as public, directly inside the module or namespace where they are referenced.

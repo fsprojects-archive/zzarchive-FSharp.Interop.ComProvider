@@ -17,15 +17,20 @@ type ComProvider(cfg:TypeProviderConfig) as this =
     
     let asm = Assembly.GetExecutingAssembly()
     
-    do  this.RegisterProbingFolder(cfg.TemporaryFolder)
-        for lib in loadTypeLibs() do
-           let ns = sprintf "TypeLib.%s" lib.Name
-           let ty = ProvidedTypeDefinition(asm, ns, lib.Version.String, None)
-           ty.IsErased <- false
-           ty.AddAssemblyTypesAsNestedTypesDelayed <| fun _ -> 
-               let assembly = TypeLibImport.importFromPath lib.Path cfg.TemporaryFolder :> Assembly
-               ProvidedAssembly.RegisterGenerated(Path.Combine(cfg.TemporaryFolder, assembly.GetName().Name + ".dll"))
-           this.AddNamespace(ns, [ty])
+    let types =
+        [ for name, versions in loadTypeLibs() |> Seq.groupBy (fun l -> l.Name) do
+            let nameTy = ProvidedTypeDefinition(asm, "TypeLib", name, None)
+            yield nameTy
+            for version in versions do
+               let versionTy = ProvidedTypeDefinition(TypeContainer.TypeToBeDecided, version.Version.String, None)
+               nameTy.AddMember(versionTy)
+               versionTy.IsErased <- false
+               versionTy.AddAssemblyTypesAsNestedTypesDelayed <| fun _ -> 
+                   let assembly = TypeLibImport.importFromPath version.Path cfg.TemporaryFolder :> Assembly
+                   ProvidedAssembly.RegisterGenerated(Path.Combine(cfg.TemporaryFolder, assembly.GetName().Name + ".dll")) ]
+    
+    do  this.AddNamespace("TypeLib", types)
+        this.RegisterProbingFolder(cfg.TemporaryFolder)
 
 [<TypeProviderAssembly>]
 ()
