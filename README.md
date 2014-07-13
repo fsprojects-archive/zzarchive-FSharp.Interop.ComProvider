@@ -26,8 +26,6 @@ Here is the same example as a script:
 ``` fsharp
 #r @"ComProvider.dll"
 
-open System
-
 type Shell = TypeLib.``Microsoft Shell Controls And Automation``.``1.0``
 
 let shell = Shell.ShellClass()
