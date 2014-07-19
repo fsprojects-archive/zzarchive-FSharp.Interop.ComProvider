@@ -1,8 +1,8 @@
-﻿module private ComProvider.TypeLibInfo
+﻿module private FSharp.ComProvider.TypeLibInfo
 
 open System
 open Microsoft.Win32
-open ComProvider.Utility
+open Utility
 
 type TypeLibVersion = { 
     String: string; 

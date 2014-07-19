@@ -1,11 +1,11 @@
-﻿module private ComProvider.TypeLibImport
+﻿module private FSharp.ComProvider.TypeLibImport
 
 open System
 open System.IO
 open System.Reflection
 open System.Runtime.InteropServices
 open System.Runtime.InteropServices.ComTypes
-open ComProvider.Utility
+open Utility
 
 [<DllImport("oleaut32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)>]
 extern void private LoadTypeLib(string filename, ITypeLib& typelib);
@@ -21,7 +21,7 @@ let rec private convertToAsm typeLib asmDir =
     let asmPath = Path.Combine(asmDir, asmFile)
     converter.ConvertTypeLibToAssembly(typeLib, asmPath, flags, sink, null, null, "", null)
 
-let importFromPath typeLibPath asmDir =
+let importTypeLib typeLibPath asmDir =
     let mutable typeLib : ITypeLib = null
     LoadTypeLib(typeLibPath, &typeLib)
     let asm = convertToAsm typeLib asmDir

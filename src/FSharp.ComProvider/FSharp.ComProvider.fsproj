@@ -8,7 +8,7 @@
     <ProjectGuid>7e90d6ce-a10b-4858-a5bc-41df7250cbca</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>ComProvider</RootNamespace>
-    <AssemblyName>ComProvider</AssemblyName>
+    <AssemblyName>FSharp.ComProvider</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.3.0.0</TargetFSharpCoreVersion>
     <Name>ComProvider</Name>
@@ -43,6 +43,7 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyInfo.fs" />
     <Compile Include="ProvidedTypes.fs" />
     <Compile Include="Utility.fs" />
     <Compile Include="TypeLibInfo.fs" />

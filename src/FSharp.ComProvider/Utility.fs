@@ -1,4 +1,4 @@
-﻿module private ComProvider.Utility
+﻿module private FSharp.ComProvider.Utility
 
 open System.Collections.Generic
 open Microsoft.Win32

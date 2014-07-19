@@ -2,7 +2,7 @@
 
 The COM Type Provider provides a new way to do COM interop from F#.
 
-For more details see the [documentation](http://fsprojects.github.io/ComProvider/).
+For more details see the [documentation](http://fsprojects.github.io/FSharp.ComProvider/).
 
 ## Technical Overview
 

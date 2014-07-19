@@ -28,15 +28,17 @@ open SourceLink
 
 // The name of the project
 // (used by attributes in AssemblyInfo, name of a NuGet package and directory in 'src')
-let project = "ComProvider"
+let project = "FSharp.ComProvider"
 
 // Short summary of the project
 // (used as description in AssemblyInfo and as a short summary for NuGet package)
-let summary = "F# type provider for COM interop"
+let summary = "F# type provider for COM interop."
 
 // Longer description of the project
 // (used as a description for NuGet package; line breaks are automatically cleaned up)
-let description = "F# type provider for COM interop"
+let description = "The COM Type Provider provides a new way to do COM interop from F#. " +
+                  "It allows you to access COM components directly from F# projects and " +
+                  "scripts without adding any references other than the type provider itself."
 
 // List of author names (for NuGet package)
 let authors = [ "Luke Sandell" ]
@@ -45,7 +47,7 @@ let authors = [ "Luke Sandell" ]
 let tags = "F# fsharp typeprovider COM interop"
 
 // File system information
-let solutionFile  = "ComProvider.sln"
+let solutionFile  = "FSharp.ComProvider.sln"
 
 // Pattern specifying assemblies to be tested using NUnit
 let testAssemblies = "tests/**/bin/Release/*Tests*.dll"
@@ -55,7 +57,7 @@ let testAssemblies = "tests/**/bin/Release/*Tests*.dll"
 let gitHome = "https://github.com/fsprojects"
 
 // The name of the project on GitHub
-let gitName = "ComProvider"
+let gitName = "FSharp.ComProvider"
 
 // The url for the raw files hosted
 let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/fsprojects"
@@ -71,12 +73,14 @@ let release = parseReleaseNotes (IO.File.ReadAllLines "RELEASE_NOTES.md")
 // Generate assembly info files with the right version & up-to-date information
 Target "AssemblyInfo" (fun _ ->
   let fileName = "src/" + project + "/AssemblyInfo.fs"
-  CreateFSharpAssemblyInfo fileName
+  CreateFSharpAssemblyInfoWithConfig fileName
       [ Attribute.Title project
         Attribute.Product project
         Attribute.Description summary
         Attribute.Version release.AssemblyVersion
-        Attribute.FileVersion release.AssemblyVersion ]
+        Attribute.InformationalVersion release.NugetVersion ]
+      (AssemblyInfoFileConfig(false))
+  ()
 )
 
 // --------------------------------------------------------------------------------------

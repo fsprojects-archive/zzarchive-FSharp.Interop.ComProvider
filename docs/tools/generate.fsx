@@ -4,12 +4,12 @@
 // --------------------------------------------------------------------------------------
 
 // Binaries that have XML documentation (in a corresponding generated XML file)
-let referenceBinaries = [ "ComProvider.dll" ]
+let referenceBinaries = [ "FSharp.ComProvider.dll" ]
 
 // Web site location for the generated documentation
-let website = "/ComProvider"
+let website = "/FSharp.ComProvider"
 
-let githubLink = "http://github.com/fsprojects/ComProvider"
+let githubLink = "http://github.com/fsprojects/FSharp.ComProvider"
 
 // Specify more information about your project
 let info =
@@ -17,7 +17,7 @@ let info =
     "project-author", "Luke Sandell"
     "project-summary", "F# type provider for COM interop"
     "project-github", githubLink
-    "project-nuget", "http://nuget.com/packages/ComProvider" ]
+    "project-nuget", "http://nuget.com/packages/FSharp.ComProvider" ]
 
 // --------------------------------------------------------------------------------------
 // For typical project, no changes are needed below

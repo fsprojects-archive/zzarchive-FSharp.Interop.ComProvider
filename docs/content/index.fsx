@@ -6,8 +6,8 @@
 open System
 
 (**
-COM Type Provider
-===================
+COM Type Provider for F#
+========================
 
 The COM Type Provider provides a new way to do COM interop from F#. It allows
 you to access COM components directly from F# projects and scripts without
@@ -32,7 +32,7 @@ Sample
 Here is a simple script that uses COM to launch a Windows Explorer window:
 
 *)
-#r "ComProvider.dll"
+#r "FSharp.ComProvider.dll"
 
 type Shell = TypeLib.``Microsoft Shell Controls And Automation``.``1.0``
 
@@ -64,9 +64,9 @@ The library is available under a public domain license, which allows modificatio
 redistribution for both commercial and non-commercial purposes. For more information
 see the [License file][license] in the GitHub repository.
 
-  [content]: https://github.com/fsprojects/ComProvider/tree/master/docs/content
-  [gh]: https://github.com/fsprojects/ComProvider
-  [issues]: https://github.com/fsprojects/ComProvider/issues
-  [readme]: https://github.com/fsprojects/ComProvider/blob/master/README.md
-  [license]: https://github.com/fsprojects/ComProvider/blob/master/LICENSE.txt
+  [content]: https://github.com/fsprojects/FSharp.ComProvider/tree/master/docs/content
+  [gh]: https://github.com/fsprojects/FSharp.ComProvider
+  [issues]: https://github.com/fsprojects/FSharp.ComProvider/issues
+  [readme]: https://github.com/fsprojects/FSharp.ComProvider/blob/master/README.md
+  [license]: https://github.com/fsprojects/FSharp.ComProvider/blob/master/LICENSE.txt
 *)

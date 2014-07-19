@@ -3,7 +3,7 @@ init:
 build_script:
   - cmd: build.cmd
 test: off
-version: 1.0.0-pre1-{build}
+version: 1.0.0pre1-{build}
 artifacts:
   - path: bin
     name: bin
