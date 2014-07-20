@@ -13,19 +13,21 @@ The COM Type Provider provides a new way to do COM interop from F#. It allows
 you to access COM components directly from F# projects and scripts without
 adding any references other than the type provider itself.
 
-<div class="well well-small center" id="nuget">
-    The Com Type Provider can be
-    <a href="https://www.nuget.org/packages/FSharp.ComProvider/">installed from NuGet</a>:
-    <pre>PM> Install-Package ComProvider -Pre</pre>
-</div>
+<p>
+    <img src="img/intellisense-sample.png" class="center"
+         alt="Visual Studio Intellisense Sample" />
+</p>
 
 One advantage of this method is that you can author and deploy F# scripts
 without having to pre-generate the interop assemblies. Another advantage is
 that you can easily explore all the COM components installed on your machine
 via intellisense.
 
-<img src="img/intellisense-sample.png" class="center"
-     alt="Visual Studio Intellisense Sample" />
+<div class="well well-small center" id="nuget">
+    The Com Type Provider can be
+    <a href="https://www.nuget.org/packages/FSharp.ComProvider/">installed from NuGet</a>:
+    <pre>PM> Install-Package FSharp.ComProvider -Pre</pre>
+</div>
 
 Sample
 ------
