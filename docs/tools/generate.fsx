@@ -17,7 +17,7 @@ let info =
     "project-author", "Luke Sandell"
     "project-summary", "F# type provider for COM interop"
     "project-github", githubLink
-    "project-nuget", "http://nuget.com/packages/FSharp.ComProvider" ]
+    "project-nuget", "http://www.nuget.org/packages/FSharp.ComProvider" ]
 
 // --------------------------------------------------------------------------------------
 // For typical project, no changes are needed below

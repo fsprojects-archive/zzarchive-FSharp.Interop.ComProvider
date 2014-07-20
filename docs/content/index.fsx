@@ -15,8 +15,8 @@ adding any references other than the type provider itself.
 
 <div class="well well-small center" id="nuget">
     The Com Type Provider can be
-    <a href="https://nuget.org/packages/ComProvider">installed from NuGet</a>:
-    <pre>PM> Install-Package ComProvider</pre>
+    <a href="https://www.nuget.org/packages/FSharp.ComProvider/">installed from NuGet</a>:
+    <pre>PM> Install-Package ComProvider -Pre</pre>
 </div>
 
 One advantage of this method is that you can author and deploy F# scripts
