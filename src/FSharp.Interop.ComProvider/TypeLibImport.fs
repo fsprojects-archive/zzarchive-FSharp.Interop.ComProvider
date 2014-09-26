@@ -1,4 +1,4 @@
-﻿module private FSharp.ComProvider.TypeLibImport
+﻿module private FSharp.Interop.ComProvider.TypeLibImport
 
 open System
 open System.IO

@@ -25,8 +25,8 @@ via intellisense.
 
 <div class="well well-small center" id="nuget">
     The Com Type Provider can be
-    <a href="https://www.nuget.org/packages/FSharp.ComProvider/">installed from NuGet</a>:
-    <pre>PM> Install-Package FSharp.ComProvider -Pre</pre>
+    <a href="https://www.nuget.org/packages/FSharp.Interop.ComProvider/">installed from NuGet</a>:
+    <pre>PM> Install-Package FSharp.Interop.ComProvider -Pre</pre>
 </div>
 
 Sample
@@ -34,7 +34,7 @@ Sample
 Here is a simple script that uses COM to launch a Windows Explorer window:
 
 *)
-#r "FSharp.ComProvider.dll"
+#r "FSharp.Interop.ComProvider.dll"
 
 type Shell = TypeLib.``Microsoft Shell Controls And Automation``.``1.0``
 
@@ -66,9 +66,9 @@ The library is available under a public domain license, which allows modificatio
 redistribution for both commercial and non-commercial purposes. For more information
 see the [License file][license] in the GitHub repository.
 
-  [content]: https://github.com/fsprojects/FSharp.ComProvider/tree/master/docs/content
-  [gh]: https://github.com/fsprojects/FSharp.ComProvider
-  [issues]: https://github.com/fsprojects/FSharp.ComProvider/issues
-  [readme]: https://github.com/fsprojects/FSharp.ComProvider/blob/master/README.md
-  [license]: https://github.com/fsprojects/FSharp.ComProvider/blob/master/LICENSE.txt
+  [content]: https://github.com/fsprojects/FSharp.Interop.ComProvider/tree/master/docs/content
+  [gh]: https://github.com/fsprojects/FSharp.Interop.ComProvider
+  [issues]: https://github.com/fsprojects/FSharp.Interop.ComProvider/issues
+  [readme]: https://github.com/fsprojects/FSharp.Interop.ComProvider/blob/master/README.md
+  [license]: https://github.com/fsprojects/FSharp.Interop.ComProvider/blob/master/LICENSE.txt
 *)

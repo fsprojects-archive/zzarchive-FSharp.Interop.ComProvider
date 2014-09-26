@@ -8,7 +8,7 @@
 //
 // This code is a sample for use in conjunction with the F# 3.0 Beta release of March 2012
 
-namespace FSharp.ComProvider.ProvidedTypes
+namespace FSharp.Interop.ComProvider.ProvidedTypes
 
 open System
 open System.Text

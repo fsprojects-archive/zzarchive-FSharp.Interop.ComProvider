@@ -5,8 +5,8 @@
     <version>@build.number@</version>
     <authors>@authors@</authors>
     <owners>@authors@</owners>
-    <licenseUrl>http://github.com/fsprojects/FSharp.ComProvider/blob/master/LICENSE.txt</licenseUrl>
-    <projectUrl>http://fsprojects.github.com/FSharp.ComProvider/</projectUrl>
+    <licenseUrl>http://github.com/fsprojects/FSharp.Interop.ComProvider/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>http://fsprojects.github.com/FSharp.Interop.ComProvider/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>@summary@</summary>
     <description>@description@</description>
@@ -15,7 +15,7 @@
     <dependencies />
   </metadata>
   <files>
-    <file src="..\bin\FSharp.ComProvider.dll" target="lib/net40" />
-    <file src="..\bin\FSharp.ComProvider.pdb" target="lib/net40" />
+    <file src="..\bin\FSharp.Interop.ComProvider.dll" target="lib/net40" />
+    <file src="..\bin\FSharp.Interop.ComProvider.pdb" target="lib/net40" />
   </files>
 </package>

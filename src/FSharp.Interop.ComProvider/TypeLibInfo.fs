@@ -1,4 +1,4 @@
-﻿module private FSharp.ComProvider.TypeLibInfo
+﻿module private FSharp.Interop.ComProvider.TypeLibInfo
 
 open System
 open Microsoft.Win32

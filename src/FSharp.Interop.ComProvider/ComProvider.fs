@@ -1,10 +1,10 @@
-﻿namespace FSharp.ComProvider
+﻿namespace FSharp.Interop.ComProvider
 
 open System
 open System.IO
 open System.Reflection
 open Microsoft.FSharp.Core.CompilerServices
-open FSharp.ComProvider.ProvidedTypes
+open FSharp.Interop.ComProvider.ProvidedTypes
 open TypeLibInfo
 open TypeLibImport
 
