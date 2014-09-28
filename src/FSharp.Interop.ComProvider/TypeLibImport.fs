@@ -24,6 +24,9 @@ let rec private convertToAsm typeLib asmDir =
 let importTypeLib typeLibPath asmDir =
     let mutable typeLib : ITypeLib = null
     LoadTypeLib(typeLibPath, &typeLib)
+    if typeLib = null then
+        failwith ("Error loading type library. Please check that the " +
+                  "component is correctly installed and registered.")
     let asm = convertToAsm typeLib asmDir
     asm.Save(asm.GetName().Name + ".dll")
     asm
