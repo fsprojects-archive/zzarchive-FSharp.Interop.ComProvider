@@ -12,6 +12,7 @@ type TypeLibVersion = {
 type TypeLib = { 
     Name : string; 
     Version: TypeLibVersion;
+    Platform: string;
     Path: string }
 
 let private tryParseVersion (text:string) = 
@@ -19,7 +20,7 @@ let private tryParseVersion (text:string) =
     | [|true, major; true, minor|] -> Some { String = text; Major = major; Minor = minor }
     | _ -> None
 
-let loadTypeLibs() =
+let loadTypeLibs preferredPlatform =
     [ use rootKey = Registry.ClassesRoot.OpenSubKey("TypeLib")
       for typeLibKey in rootKey.GetSubKeys() do
       for versionKey in typeLibKey.GetSubKeys() do
@@ -30,10 +31,14 @@ let loadTypeLibs() =
           if name <> ""
              && version.IsSome 
              && localeKey.SubKeyName = "0" 
-             && platformKey.SubKeyName = "win32"
              && versionKey.GetValue("PrimaryInteropAssemblyName") = null 
           then
               yield { Name = name
                       Version = version.Value
+                      Platform = platformKey.SubKeyName
                       Path = platformKey.DefaultValue } ]
-    |> Seq.distinct
+    |> Seq.groupBy (fun lib -> lib.Name, lib.Version)
+    |> Seq.map (fun (_, libs) ->
+        match libs |> Seq.tryFind (fun lib -> lib.Platform = preferredPlatform) with
+        | Some lib -> lib
+        | None -> Seq.head libs)

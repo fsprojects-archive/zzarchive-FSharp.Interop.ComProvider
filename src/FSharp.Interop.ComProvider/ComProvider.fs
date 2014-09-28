@@ -14,8 +14,12 @@ type ComProvider(cfg:TypeProviderConfig) as this =
     
     let asm = Assembly.GetExecutingAssembly()
     
+    let preferredPlatform =
+        if cfg.IsHostedExecution && Environment.Is64BitProcess then "win64"
+        else "win32"
+
     let types =
-        [ for name, versions in loadTypeLibs() |> Seq.groupBy (fun l -> l.Name) do
+        [ for name, versions in loadTypeLibs preferredPlatform |> Seq.groupBy (fun l -> l.Name) do
             let nameTy = ProvidedTypeDefinition(asm, "TypeLib", name, None)
             yield nameTy
             for version in versions do
