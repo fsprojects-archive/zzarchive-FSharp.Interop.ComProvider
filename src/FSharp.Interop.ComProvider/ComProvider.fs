@@ -7,6 +7,7 @@ open Microsoft.FSharp.Core.CompilerServices
 open FSharp.Interop.ComProvider.ProvidedTypes
 open TypeLibInfo
 open TypeLibImport
+open TypeLibDoc
 
 [<TypeProvider>]
 type ComProvider(cfg:TypeProviderConfig) as this =
@@ -35,13 +36,19 @@ type ComProvider(cfg:TypeProviderConfig) as this =
             let nameTy = ProvidedTypeDefinition(asm, "TypeLib", name, None)
             yield nameTy
             for version in versions do
+               let lazyTypeLib = lazy loadTypeLib version.Path
+               let lazyTypeLibDoc = lazy getTypeLibDoc lazyTypeLib.Value
                let versionTy = ProvidedTypeDefinition(TypeContainer.TypeToBeDecided, version.Version.String, None)
                nameTy.AddMember(versionTy)
                versionTy.IsErased <- false
+               versionTy.AddXmlDocDelayed <| fun _ ->
+                    let name, docString, _ = lazyTypeLibDoc.Value
+                    sprintf "%s (%s)" docString name
                versionTy.AddAssemblyTypesAsNestedTypesDelayed <| fun _ -> 
-                   let assembly = importTypeLib version.Path cfg.TemporaryFolder :> Assembly
-                   ProvidedAssembly.RegisterGenerated(Path.Combine(cfg.TemporaryFolder, assembly.GetName().Name + ".dll")) ]
-    
+                   let assembly = importTypeLib lazyTypeLib.Value cfg.TemporaryFolder
+                   let _, _, typeDocs = lazyTypeLibDoc.Value
+                   ProvidedAssembly.RegisterGenerated(Path.Combine(cfg.TemporaryFolder, assembly.GetName().Name + ".dll")) |> annotateAssembly typeDocs ]
+
     do  this.AddNamespace("TypeLib", types)
         this.RegisterProbingFolder(cfg.TemporaryFolder)
 
