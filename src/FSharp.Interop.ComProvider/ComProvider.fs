@@ -4,7 +4,7 @@ open System
 open System.IO
 open System.Reflection
 open Microsoft.FSharp.Core.CompilerServices
-open FSharp.Interop.ComProvider.ProvidedTypes
+open ProviderImplementation.ProvidedTypes
 open TypeLibInfo
 open TypeLibImport
 open TypeLibDoc
