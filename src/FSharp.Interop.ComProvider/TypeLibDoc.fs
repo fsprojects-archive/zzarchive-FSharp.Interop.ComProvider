@@ -45,14 +45,19 @@ let annotateAssembly typeDocs (asm:Assembly) =
         |> Option.map fst
 
     let memberDoc (memb:MemberInfo) =
-        typeDocs
-        |> Map.tryFind memb.DeclaringType.Name
-        |> Option.bind (snd >> Map.tryFind memb.Name)
+        let ty = memb.DeclaringType
+        ty.GetInterfaces()
+        |> Seq.append [ty]
+        |> Seq.choose (fun ty -> typeDocs |> Map.tryFind ty.Name)
+        |> Seq.choose (fun (_, membs) -> membs |> Map.tryFind memb.Name)
+        |> Seq.tryFind (not << String.IsNullOrEmpty)
 
     let annotate getDoc addAnnotation (memb:#MemberInfo) =
-        match getDoc memb with
-        | Some doc -> addAnnotation (addAttr doc memb) memb
-        | None -> memb
+        let doc =
+            match getDoc memb with
+            | Some doc -> doc
+            | None -> ""
+        addAnnotation (addAttr doc memb) memb
 
     let annotateMethod = annotate memberDoc <| fun data meth ->
         { new MethodInfoDelegator(meth) with
