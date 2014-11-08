@@ -44,10 +44,12 @@ type ComProvider(cfg:TypeProviderConfig) as this =
                versionTy.AddXmlDocDelayed <| fun _ ->
                     let name, docString, _ = lazyTypeLibDoc.Value
                     sprintf "%s (%s)" docString name
-               versionTy.AddAssemblyTypesAsNestedTypesDelayed <| fun _ -> 
-                   let assembly = importTypeLib lazyTypeLib.Value cfg.TemporaryFolder
+               versionTy.AddMembersDelayed <| fun _ ->
                    let _, _, typeDocs = lazyTypeLibDoc.Value
-                   ProvidedAssembly.RegisterGenerated(Path.Combine(cfg.TemporaryFolder, assembly.GetName().Name + ".dll")) |> annotateAssembly typeDocs ]
+                   let asm = importTypeLib lazyTypeLib.Value cfg.TemporaryFolder
+                   let savedAsm = ProvidedAssembly.RegisterGenerated(Path.Combine(cfg.TemporaryFolder, asm.GetName().Name + ".dll"))
+                   let annotatedAsm = savedAsm |> annotateAssembly typeDocs
+                   annotatedAsm.GetTypes() |> Array.toList ]
 
     do  this.AddNamespace("TypeLib", types)
         this.RegisterProbingFolder(cfg.TemporaryFolder)

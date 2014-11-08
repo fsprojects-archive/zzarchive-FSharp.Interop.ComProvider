@@ -17,7 +17,7 @@ let rec private convertToAsm typeLib asmDir =
     let flags = TypeLibImporterFlags.None
     let asmFile = Guid.NewGuid().ToString() + ".dll"
     let asmPath = Path.Combine(asmDir, asmFile)
-    converter.ConvertTypeLibToAssembly(typeLib, asmPath, flags, sink, null, null, "", null)
+    converter.ConvertTypeLibToAssembly(typeLib, asmPath, flags, sink, null, null, null, null)
 
 let loadTypeLib path =
     let mutable typeLib : ITypeLib = null
