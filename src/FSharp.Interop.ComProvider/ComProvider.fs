@@ -33,7 +33,7 @@ type ComProvider(cfg:TypeProviderConfig) as this =
     // type library name itself and of course the major.minor version number.
     let types =
         [ for name, versions in loadTypeLibs preferredPlatform |> Seq.groupBy (fun l -> l.Name) do
-            let nameTy = ProvidedTypeDefinition(asm, "TypeLib", name, None)
+            let nameTy = ProvidedTypeDefinition(asm, "COM", name, None)
             yield nameTy
             for version in versions do
                let lazyTypeLib = lazy loadTypeLib version.Path
@@ -51,7 +51,7 @@ type ComProvider(cfg:TypeProviderConfig) as this =
                    let annotatedAsm = savedAsm |> annotateAssembly typeDocs
                    annotatedAsm.GetTypes() |> Array.toList ]
 
-    do  this.AddNamespace("TypeLib", types)
+    do  this.AddNamespace("COM", types)
         this.RegisterProbingFolder(cfg.TemporaryFolder)
 
 [<TypeProviderAssembly>]
