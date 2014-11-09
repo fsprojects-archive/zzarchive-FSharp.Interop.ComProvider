@@ -7,14 +7,13 @@ open Microsoft.FSharp.Core.CompilerServices
 open ProviderImplementation.ProvidedTypes
 open TypeLibInfo
 open TypeLibImport
-open TypeLibDoc
 
 [<TypeProvider>]
 type ComProvider(cfg:TypeProviderConfig) as this =
     inherit TypeProviderForNamespaces()
     
     let asm = Assembly.GetExecutingAssembly()
-    
+
     // The TypeLib registry key allows specifying separate type libraries for each CPU
     // platform. However, there is no way to know what the target platform will be when
     // compiling a project, since this information is not available to type providers.
@@ -36,21 +35,15 @@ type ComProvider(cfg:TypeProviderConfig) as this =
             let nameTy = ProvidedTypeDefinition(asm, "COM", name, None)
             yield nameTy
             for version in versions do
-               let lazyTypeLib = lazy loadTypeLib version.Path
-               let lazyTypeLibDoc = lazy getTypeLibDoc lazyTypeLib.Value
                let versionTy = ProvidedTypeDefinition(TypeContainer.TypeToBeDecided, version.Version.String, None)
                nameTy.AddMember(versionTy)
                versionTy.IsErased <- false
-               versionTy.AddXmlDocDelayed <| fun _ ->
-                    let name, docString, _ = lazyTypeLibDoc.Value
-                    sprintf "%s (%s)" docString name
                versionTy.AddMembersDelayed <| fun _ ->
-                   let _, _, typeDocs = lazyTypeLibDoc.Value
-                   let asm = importTypeLib lazyTypeLib.Value cfg.TemporaryFolder
-                   let savedAsm = ProvidedAssembly.RegisterGenerated(Path.Combine(cfg.TemporaryFolder, asm.GetName().Name + ".dll"))
-                   let annotatedAsm = savedAsm |> annotateAssembly typeDocs
-                   annotatedAsm.GetTypes() |> Array.toList ]
-
+                   let tempDir = Path.Combine(cfg.TemporaryFolder, "FSharp.Interop.ComProvider", Guid.NewGuid().ToString())
+                   Directory.CreateDirectory(tempDir) |> ignore
+                   let assemblies = importTypeLib version.Path tempDir
+                   assemblies |> List.iter(fun asm -> ProvidedAssembly.RegisterGenerated(asm.Location) |> ignore)
+                   assemblies |> List.collect(fun asm -> asm.GetTypes() |> Seq.toList) ]
     do  this.AddNamespace("COM", types)
         this.RegisterProbingFolder(cfg.TemporaryFolder)
 

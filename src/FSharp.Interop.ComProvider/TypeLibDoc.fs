@@ -14,19 +14,17 @@ let getStruct<'t when 't : struct> ptr freePtr =
     str
 
 let getTypeLibDoc (typeLib:ITypeLib) =
-    let libName, libDoc, _, _ = typeLib.GetDocumentation(-1)
-    let typeDocs =
-        [ for typeIndex = 0 to typeLib.GetTypeInfoCount() - 1 do
-            let typeInfo = typeLib.GetTypeInfo(typeIndex)
-            let typeAttr = getStruct<TYPEATTR> (typeInfo.GetTypeAttr()) typeInfo.ReleaseTypeAttr
-            let typeName, typeDoc, _, _ = typeInfo.GetDocumentation(-1)
-            let memberDocs =
-                [ for funcIndex = 0 to int typeAttr.cFuncs - 1 do
-                    let funcDesc = getStruct<FUNCDESC> (typeInfo.GetFuncDesc(funcIndex)) typeInfo.ReleaseFuncDesc
-                    let funcName, funcDoc, _, _ = typeInfo.GetDocumentation(funcDesc.memid)
-                    yield funcName, funcDoc ]
-            yield typeName, (typeDoc, Map.ofSeq memberDocs) ]
-    libName, libDoc, Map.ofSeq typeDocs
+    [ for typeIndex = 0 to typeLib.GetTypeInfoCount() - 1 do
+        let typeInfo = typeLib.GetTypeInfo(typeIndex)
+        let typeAttr = getStruct<TYPEATTR> (typeInfo.GetTypeAttr()) typeInfo.ReleaseTypeAttr
+        let typeName, typeDoc, _, _ = typeInfo.GetDocumentation(-1)
+        let memberDocs =
+            [ for funcIndex = 0 to int typeAttr.cFuncs - 1 do
+                let funcDesc = getStruct<FUNCDESC> (typeInfo.GetFuncDesc(funcIndex)) typeInfo.ReleaseFuncDesc
+                let funcName, funcDoc, _, _ = typeInfo.GetDocumentation(funcDesc.memid)
+                yield funcName, funcDoc ]
+        yield typeName, (typeDoc, Map.ofSeq memberDocs) ]
+    |> Map.ofSeq
 
 let annotateAssembly typeDocs (asm:Assembly) =
     let toList (items:seq<'t>) = ResizeArray<'t> items :> IList<'t>
