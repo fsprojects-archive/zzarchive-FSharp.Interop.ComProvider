@@ -8,18 +8,21 @@ open System.Collections.Generic
 open Microsoft.FSharp.Core.CompilerServices
 open Delegators
 
-let private cast<'t> ptr = Marshal.PtrToStructure(ptr, typeof<'t>) :?> 't
+let getStruct<'t when 't : struct> ptr freePtr =
+    let str = Marshal.PtrToStructure(ptr, typeof<'t>) :?> 't
+    freePtr ptr
+    str
 
 let getTypeLibDoc (typeLib:ITypeLib) =
     let libName, libDoc, _, _ = typeLib.GetDocumentation(-1)
     let typeDocs =
         [ for typeIndex = 0 to typeLib.GetTypeInfoCount() - 1 do
             let typeInfo = typeLib.GetTypeInfo(typeIndex)
-            let typeAttr = typeInfo.GetTypeAttr() |> cast<TYPEATTR>
+            let typeAttr = getStruct<TYPEATTR> (typeInfo.GetTypeAttr()) typeInfo.ReleaseTypeAttr
             let typeName, typeDoc, _, _ = typeInfo.GetDocumentation(-1)
             let memberDocs =
                 [ for funcIndex = 0 to int typeAttr.cFuncs - 1 do
-                    let funcDesc = typeInfo.GetFuncDesc(funcIndex) |> cast<FUNCDESC>
+                    let funcDesc = getStruct<FUNCDESC> (typeInfo.GetFuncDesc(funcIndex)) typeInfo.ReleaseFuncDesc
                     let funcName, funcDoc, _, _ = typeInfo.GetDocumentation(funcDesc.memid)
                     yield funcName, funcDoc ]
             yield typeName, (typeDoc, Map.ofSeq memberDocs) ]
