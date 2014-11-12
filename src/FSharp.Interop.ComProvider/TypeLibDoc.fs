@@ -6,7 +6,7 @@ open System.Runtime.InteropServices.ComTypes
 open System.Reflection
 open System.Collections.Generic
 open Microsoft.FSharp.Core.CompilerServices
-open Delegators
+open ReflectionProxies
 
 let getStruct<'t when 't : struct> ptr freePtr =
     let str = Marshal.PtrToStructure(ptr, typeof<'t>) :?> 't
@@ -61,11 +61,11 @@ let annotateAssembly typeDocs (asm:Assembly) =
         addAnnotation (addAttr doc memb) memb
 
     let annotateMethod = annotate memberDoc <| fun data meth ->
-        { new MethodInfoDelegator(meth) with
+        { new MethodInfoProxy(meth) with
             override __.GetCustomAttributesData() = data } :> MethodInfo
 
     let annotateProperty = annotate memberDoc <| fun data prop ->
-        { new PropertyInfoDelegator(prop) with
+        { new PropertyInfoProxy(prop) with
             override __.GetCustomAttributesData() = data } :> PropertyInfo
 
     let annotateType = annotate typeDoc <| fun attr ty ->
@@ -75,5 +75,5 @@ let annotateAssembly typeDocs (asm:Assembly) =
             override __.GetProperties(flags) = ty.GetProperties(flags) |> Array.map annotateProperty
             override __.GetMembers(flags) = ty.GetMembers(flags) } :> Type
 
-    { new AssemblyDelegator(asm) with
+    { new AssemblyProxy(asm) with
         override __.GetTypes() = asm.GetTypes() |> Array.map annotateType } :> Assembly

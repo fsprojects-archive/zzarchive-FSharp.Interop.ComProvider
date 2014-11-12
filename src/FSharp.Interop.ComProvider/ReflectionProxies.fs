@@ -1,8 +1,8 @@
-﻿module private FSharp.Interop.ComProvider.Delegators
+﻿module private FSharp.Interop.ComProvider.ReflectionProxies
 
 open System.Reflection
 
-type AssemblyDelegator(x:Assembly) =
+type AssemblyProxy(x:Assembly) =
     inherit Assembly()
     override __.CodeBase = x.CodeBase
     override __.CreateInstance(typeName, ignoreCase, bindingAttr, binder, args, culture, activatorAttributes) = x.CreateInstance(typeName, ignoreCase, bindingAttr, binder, args, culture, activatorAttributes)
@@ -50,7 +50,7 @@ type AssemblyDelegator(x:Assembly) =
     override __.SecurityRuleSet = x.SecurityRuleSet
     override __.ToString() = x.ToString()
 
-type MethodInfoDelegator(x:MethodInfo) =
+type MethodInfoProxy(x:MethodInfo) =
     inherit MethodInfo()
     override __.Attributes = x.Attributes
     override __.CallingConvention = x.CallingConvention
@@ -81,7 +81,7 @@ type MethodInfoDelegator(x:MethodInfo) =
     override __.ReturnTypeCustomAttributes = x.ReturnTypeCustomAttributes
     override __.ToString() = x.ToString()
 
-type PropertyInfoDelegator(x:PropertyInfo) =
+type PropertyInfoProxy(x:PropertyInfo) =
     inherit PropertyInfo()
     override __.Attributes = x.Attributes
     override __.CanRead = x.CanRead

@@ -46,7 +46,7 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="ProvidedTypes.fs" />
     <Compile Include="Utility.fs" />
-    <Compile Include="Delegators.fs" />
+    <Compile Include="ReflectionProxies.fs" />
     <Compile Include="TypeLibInfo.fs" />
     <Compile Include="TypeLibDoc.fs" />
     <Compile Include="TypeLibImport.fs" />
