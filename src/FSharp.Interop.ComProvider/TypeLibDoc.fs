@@ -69,7 +69,7 @@ let annotateAssembly typeDocs (asm:Assembly) =
             override __.GetCustomAttributesData() = data } :> PropertyInfo
 
     let annotateType = annotate typeDoc <| fun attr ty ->
-        { new TypeDelegator(ty) with
+        { new TypeProxy(ty) with
             override __.GetCustomAttributesData() = attr
             override __.GetMethods(flags) = ty.GetMethods(flags) |> Array.map annotateMethod 
             override __.GetProperties(flags) = ty.GetProperties(flags) |> Array.map annotateProperty

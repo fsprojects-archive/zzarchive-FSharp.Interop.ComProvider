@@ -108,3 +108,7 @@ type PropertyInfoProxy(x:PropertyInfo) =
     override __.PropertyType = x.PropertyType
     override __.ReflectedType = x.ReflectedType
     override __.SetValue(obj, value, invokeAttr, binder, index, culture) = x.SetValue(obj, value, invokeAttr, binder, index, culture)
+
+type TypeProxy(ty) =
+    inherit TypeDelegator(ty)
+    override __.GetCustomAttributesData() = ty.GetCustomAttributesData()

@@ -1,0 +1,12 @@
+# COM Provider TODO
+- Delete temp assemblies
+- Test referencing from another project
+- Hide first class events
+- Fix type library referencing and stdole
+- Support Primary Interop Assemblies (partial)
+- Logo
+- Fix docs
+- Close Don's issue
+- Add constructor docs
+- Got to definition
+- Investigate field docs
