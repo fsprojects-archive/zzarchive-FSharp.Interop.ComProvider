@@ -1,11 +1,12 @@
 ﻿module private FSharp.Interop.ComProvider.TypeLibImport
 
+open System
 open System.IO
 open System.Reflection
 open System.Runtime.InteropServices
 open System.Runtime.InteropServices.ComTypes
+open ReflectionProxies
 open TypeLibDoc
-open System
 
 [<DllImport("oleaut32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)>]
 extern void private LoadTypeLib(string filename, ITypeLib& typelib);
@@ -17,6 +18,17 @@ let loadTypeLib path =
         failwith ("Error loading type library. Please check that the " +
                   "component is correctly installed and registered.")
     typeLib
+
+let hideEvents assembly =
+    // COM events don't import correctly as first-class events in F#, as it
+    // expects the first parameter to be the "sender", a convention COM does
+    // not follow. Therefore, we hide the actual event members and only expose
+    // the add / remove handler methods.
+    let hideTypeEvents ty =
+        { new TypeProxy(ty) with
+            override __.GetEvents(flags) = [||] } :> Type
+    { new AssemblyProxy(assembly) with
+        override __.GetTypes() = base.GetTypes() |> Array.map hideTypeEvents } :> Assembly
 
 let rec importTypeLib path asmDir =
     let assemblies = ResizeArray<Assembly>()
@@ -34,6 +46,7 @@ let rec importTypeLib path asmDir =
         let typeDocs = getTypeLibDoc typeLib
         Assembly.LoadFrom(asmPath)
         |> annotateAssembly typeDocs
+        |> hideEvents
         |> assemblies.Add
         asm :> Assembly
     let typeLib = loadTypeLib path
