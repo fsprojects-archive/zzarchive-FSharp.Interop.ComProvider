@@ -1,6 +1,7 @@
 ﻿module private FSharp.Interop.ComProvider.TypeLibInfo
 
 open System
+open System.IO
 open Microsoft.Win32
 open Utility
 
@@ -20,6 +21,10 @@ let private tryParseVersion (text:string) =
     | [|true, major; true, minor|] -> Some { String = text; Major = major; Minor = minor }
     | _ -> None
 
+let private isInDotNetPath =
+    let dotNetPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), @"Microsoft.NET")
+    fun (path:string) -> path.StartsWith(dotNetPath, StringComparison.OrdinalIgnoreCase)
+
 let loadTypeLibs preferredPlatform =
     [ use rootKey = Registry.ClassesRoot.OpenSubKey("TypeLib")
       for typeLibKey in rootKey.GetSubKeys() do
@@ -37,6 +42,7 @@ let loadTypeLibs preferredPlatform =
                       Version = version.Value
                       Platform = platformKey.SubKeyName
                       Path = platformKey.DefaultValue } ]
+    |> Seq.filter (fun lib -> not (isInDotNetPath lib.Path))
     |> Seq.groupBy (fun lib -> lib.Name, lib.Version)
     |> Seq.map (fun (_, libs) ->
         match libs |> Seq.tryFind (fun lib -> lib.Platform = preferredPlatform) with
