@@ -50,6 +50,24 @@ type AssemblyProxy(x:Assembly) =
     override __.SecurityRuleSet = x.SecurityRuleSet
     override __.ToString() = x.ToString()
 
+type EventInfoProxy(x:EventInfo) =
+    inherit EventInfo()
+    override __.Attributes = x.Attributes
+    override __.AddEventHandler(target, handler) = x.AddEventHandler(target, handler)
+    override __.DeclaringType = x.DeclaringType
+    override __.GetAddMethod(nonPublic) = x.GetAddMethod(nonPublic)
+    override __.GetCustomAttributes(inherited) = x.GetCustomAttributes(inherited)
+    override __.GetCustomAttributes(attributeType, inherited) = x.GetCustomAttributes(attributeType, inherited)
+    override __.GetCustomAttributesData() = x.GetCustomAttributesData()
+    override __.GetOtherMethods(nonPublic) = x.GetOtherMethods(nonPublic)
+    override __.GetRaiseMethod(nonPublic) = x.GetRaiseMethod(nonPublic)
+    override __.GetRemoveMethod(nonPublic) = x.GetRemoveMethod(nonPublic)
+    override __.IsDefined(attributeType, inherited) = x.IsDefined(attributeType, inherited)
+    override __.IsMulticast = x.IsMulticast
+    override __.Name = x.Name
+    override __.ReflectedType = x.ReflectedType
+    override __.RemoveEventHandler(target, handler) = x.RemoveEventHandler(target, handler)
+
 type MethodInfoProxy(x:MethodInfo) =
     inherit MethodInfo()
     override __.Attributes = x.Attributes

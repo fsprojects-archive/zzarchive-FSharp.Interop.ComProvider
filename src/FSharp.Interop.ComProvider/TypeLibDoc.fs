@@ -40,6 +40,20 @@ let annotateAssembly typeDocs (asm:Assembly) =
         |> Seq.append (memb.GetCustomAttributesData())
         |> toList
 
+    let findSourceInterface (ty:Type) =
+        match ty.GetCustomAttributes(typeof<ComEventInterfaceAttribute>, false) with
+        | [| :? ComEventInterfaceAttribute as attr|] -> attr.SourceInterface
+        | _ -> ty
+
+    let findRelatedMember (memb:MemberInfo) =
+        memb.DeclaringType.GetEvents()
+        |> Seq.tryFind (fun event ->
+            [ event.GetAddMethod(); event.GetRemoveMethod() ]
+            |> Seq.exists(fun m -> m :> MemberInfo = memb))
+        |> function
+            | Some event -> event :> MemberInfo
+            | None -> memb
+
     let typeDoc (ty:Type) =
         typeDocs
         |> Map.tryFind ty.Name
@@ -49,16 +63,18 @@ let annotateAssembly typeDocs (asm:Assembly) =
         let ty = memb.DeclaringType
         ty.GetInterfaces()
         |> Seq.append [ty]
+        |> Seq.map findSourceInterface
         |> Seq.choose (fun ty -> typeDocs |> Map.tryFind ty.Name)
-        |> Seq.choose (fun (_, membs) -> membs |> Map.tryFind memb.Name)
+        |> Seq.choose (fun (_, membs) -> membs |> Map.tryFind (findRelatedMember memb).Name)
         |> Seq.tryFind (not << String.IsNullOrEmpty)
 
     let annotate getDoc addAnnotation (memb:#MemberInfo) =
-        let doc =
-            match getDoc memb with
-            | Some doc -> doc
-            | None -> ""
+        let doc = defaultArg (getDoc memb) ""
         addAnnotation (addAttr doc memb) memb
+
+    let annotateEvent = annotate memberDoc <| fun data event ->
+         { new EventInfoProxy(event) with
+            override __.GetCustomAttributesData() = data } :> EventInfo
 
     let annotateMethod = annotate memberDoc <| fun data meth ->
         { new MethodInfoProxy(meth) with
@@ -71,9 +87,9 @@ let annotateAssembly typeDocs (asm:Assembly) =
     let annotateType = annotate typeDoc <| fun attr ty ->
         { new TypeProxy(ty) with
             override __.GetCustomAttributesData() = attr
-            override __.GetMethods(flags) = ty.GetMethods(flags) |> Array.map annotateMethod 
-            override __.GetProperties(flags) = ty.GetProperties(flags) |> Array.map annotateProperty
-            override __.GetMembers(flags) = ty.GetMembers(flags) } :> Type
+            override __.GetEvents(flags) = ty.GetEvents(flags) |> Array.map annotateEvent
+            override __.GetMethods(flags) = ty.GetMethods(flags) |> Array.map annotateMethod
+            override __.GetProperties(flags) = ty.GetProperties(flags) |> Array.map annotateProperty } :> Type
 
     { new AssemblyProxy(asm) with
         override __.GetTypes() = asm.GetTypes() |> Array.map annotateType } :> Assembly
