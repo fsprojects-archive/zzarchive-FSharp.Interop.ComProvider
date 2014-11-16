@@ -4,18 +4,18 @@ open System
 open Microsoft.Win32
 open Utility
 
-type TypeLibVersion = { 
-    String: string; 
-    Major: int; 
+type TypeLibVersion = {
+    String: string;
+    Major: int;
     Minor: int }
 
-type TypeLib = { 
-    Name : string; 
+type TypeLib = {
+    Name : string;
     Version: TypeLibVersion;
     Platform: string;
     Path: string }
 
-let private tryParseVersion (text:string) = 
+let private tryParseVersion (text:string) =
     match text.Split('.') |> Array.map Int32.TryParse with
     | [|true, major; true, minor|] -> Some { String = text; Major = major; Minor = minor }
     | _ -> None
@@ -29,9 +29,9 @@ let loadTypeLibs preferredPlatform =
           let name = versionKey.DefaultValue
           let version = tryParseVersion versionKey.SubKeyName
           if name <> ""
-             && version.IsSome 
-             && localeKey.SubKeyName = "0" 
-             && versionKey.GetValue("PrimaryInteropAssemblyName") = null 
+             && version.IsSome
+             && localeKey.SubKeyName = "0"
+             && versionKey.GetValue("PrimaryInteropAssemblyName") = null
           then
               yield { Name = name
                       Version = version.Value

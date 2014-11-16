@@ -11,7 +11,7 @@ open TypeLibImport
 [<TypeProvider>]
 type ComProvider(cfg:TypeProviderConfig) as this =
     inherit TypeProviderForNamespaces()
-    
+
     let asm = Assembly.GetExecutingAssembly()
 
     // The TypeLib registry key allows specifying separate type libraries for each CPU

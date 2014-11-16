@@ -12,13 +12,13 @@ let memoize f =
                     value
 
 type RegistryKey with
-    member this.SubKeyName = 
+    member this.SubKeyName =
         this.Name.Split '\\' |> Seq.last
     member this.DefaultValue =
         this.GetValue("") |> string
-    member this.GetSubKeys() = 
-        seq { 
+    member this.GetSubKeys() =
+        seq {
             for keyName in this.GetSubKeyNames() do
                 use key = this.OpenSubKey keyName
-                yield key 
+                yield key
         }
