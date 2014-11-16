@@ -39,6 +39,9 @@ type ComProvider(cfg:TypeProviderConfig) as this =
                nameTy.AddMember(versionTy)
                versionTy.IsErased <- false
                versionTy.AddMembersDelayed <| fun _ ->
+                   version.Pia |> Option.iter (fun pia ->
+                       failwithf "Accessing type libraries with Primary Interop Assemblies using the COM Type Provider \
+                                  is not supported. Consider referencing the assembly '%s' instead." pia)
                    let tempDir = Path.Combine(cfg.TemporaryFolder, "FSharp.Interop.ComProvider", Guid.NewGuid().ToString())
                    Directory.CreateDirectory(tempDir) |> ignore
                    let assemblies = importTypeLib version.Path tempDir

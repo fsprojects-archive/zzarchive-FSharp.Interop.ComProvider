@@ -14,7 +14,8 @@ type TypeLib = {
     Name : string;
     Version: TypeLibVersion;
     Platform: string;
-    Path: string }
+    Path: string
+    Pia: string option }
 
 let private tryParseVersion (text:string) =
     match text.Split('.') |> Array.map Int32.TryParse with
@@ -36,12 +37,14 @@ let loadTypeLibs preferredPlatform =
           if name <> ""
              && version.IsSome
              && localeKey.SubKeyName = "0"
-             && versionKey.GetValue("PrimaryInteropAssemblyName") = null
           then
               yield { Name = name
                       Version = version.Value
                       Platform = platformKey.SubKeyName
-                      Path = platformKey.DefaultValue } ]
+                      Path = platformKey.DefaultValue
+                      Pia = match versionKey.GetValue("PrimaryInteropAssemblyName") with
+                            | :? string as pia -> Some pia
+                            | _ -> None } ]
     |> Seq.filter (fun lib -> not (isInDotNetPath lib.Path))
     |> Seq.groupBy (fun lib -> lib.Name, lib.Version)
     |> Seq.map (fun (_, libs) ->

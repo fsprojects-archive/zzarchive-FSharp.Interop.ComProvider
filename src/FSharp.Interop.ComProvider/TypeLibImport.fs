@@ -51,5 +51,4 @@ let rec importTypeLib path asmDir =
         asm :> Assembly
     let typeLib = loadTypeLib path
     convertToAsm typeLib |> ignore
-    Marshal.FinalReleaseComObject(typeLib) |> ignore
     assemblies |> Seq.toList
