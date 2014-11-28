@@ -28,3 +28,10 @@ Some of them I would like to eventually rectify if possible:
   Office are not supported.
 * All the types generated from the type library are embedded, rather than
   just the ones you refer to in your code.
+
+## Maintainer(s)
+
+- [@lasandell](https://github.com/lasandell)
+- [@tpetricek](https://github.com/tpetricek)
+
+The default maintainer account for projects under "fsprojects" is [@fsgit](https://github.com/fsgit) - F# Community Project Incubation Space (repo management)
