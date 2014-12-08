@@ -1,15 +1,8 @@
 ﻿module private FSharp.Interop.ComProvider.Utility
 
-open System.Collections.Generic
 open Microsoft.Win32
-
-let memoize f =
-    let cache = Dictionary<_, _>()
-    fun x -> match cache.TryGetValue x with
-             | true, value -> value
-             | _ -> let value = f x
-                    cache.[x] <- value
-                    value
+open System.Reflection
+open System
 
 type RegistryKey with
     member this.SubKeyName =
@@ -22,3 +15,9 @@ type RegistryKey with
                 use key = this.OpenSubKey keyName
                 yield key
         }
+
+type ICustomAttributeProvider with
+    member this.TryGetAttribute<'t when 't :> Attribute>() =
+        this.GetCustomAttributes(typeof<'t>, true)
+        |> Seq.cast<'t>
+        |> Seq.tryFind (fun _ -> true)

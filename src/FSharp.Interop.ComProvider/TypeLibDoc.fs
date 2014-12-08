@@ -7,6 +7,7 @@ open System.Reflection
 open System.Collections.Generic
 open Microsoft.FSharp.Core.CompilerServices
 open ReflectionProxies
+open Utility
 
 let getStruct<'t when 't : struct> ptr freePtr =
     let str = Marshal.PtrToStructure(ptr, typeof<'t>) :?> 't
@@ -41,8 +42,8 @@ let annotateAssembly typeDocs (asm:Assembly) =
         |> toList
 
     let findSourceInterface (ty:Type) =
-        match ty.GetCustomAttributes(typeof<ComEventInterfaceAttribute>, false) with
-        | [| :? ComEventInterfaceAttribute as attr|] -> attr.SourceInterface
+        match ty.TryGetAttribute<ComEventInterfaceAttribute>() with
+        | Some attr -> attr.SourceInterface
         | _ -> ty
 
     let findRelatedMember (memb:MemberInfo) =
